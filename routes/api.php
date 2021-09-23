@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('product/create','App\Http\Controllers\ProductController@create');
+Route::post('register','App\Http\Controllers\UserController@register');

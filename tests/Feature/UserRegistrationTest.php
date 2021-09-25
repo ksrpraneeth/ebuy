@@ -13,7 +13,7 @@ use Tests\TestCase;
 class UserRegistrationTest extends TestCase
 {
 
-    Use RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * @test
@@ -29,32 +29,31 @@ class UserRegistrationTest extends TestCase
         $this->assertEquals($shouldPass, $validator->passes(), $message);
     }
 
-
     /**
      * @test
      */
     public function user_should_be_able_register_with_valid_data()
     {
-        $params = ['username' => 'admin', 'password' => 'test@123', 'dob' => '1993-12-01', 'full_name' => 'Praneeth Kalluri'];
-        $response = $this->post('/api/register', $params);
-        //$response->assertNoContent();
+        $this->withoutExceptionHandling();
+
+        $params = ['username' => 'admin', 'password' => 'test@123', 'dob' => '1193-12-01', 'full_name' => 'Praneeth Kalluri'];
+        $response = $this->post('api/register', $params);
         $response->assertOk();
         $user = User::all()->toArray();
         $this->assertCount(1, $user);
         $this->assertTrue(Hash::check($params['password'], $user[0]['password']));
         $this->assertTrue($response->json(['status']));
-        $this->assertEquals($user[0],$response['data']);
+        $this->assertEquals($user[0],$response->json(['data']));
     }
 
     /**
      * @test
-     *
      */
     public function user_should_be_unique(){
-        $params = ['username' => 'admin', 'password' => 'test@123', 'dob' => '1993-12-01', 'full_name' => 'Praneeth Kalluri'];
-        $response = $this->post('/api/register', $params);
-        $params = ['username' => 'admin', 'password' => 'test@123', 'dob' => '1993-12-01', 'full_name' => 'Praneeth Kalluri'];
-        $response = $this->post('/api/register', $params);
+        $params = ['username' => 'admin', 'password' => 'test@123', 'dob' => '1193-12-01', 'full_name' => 'Praneeth Kalluri'];
+        $response = $this->post('api/register', $params);
+        $params = ['username' => 'admin', 'password' => 'test@123', 'dob' => '1193-12-01', 'full_name' => 'Praneeth Kalluri'];
+        $response = $this->post('api/register', $params);
         $response->assertSessionHasErrors('username');
     }
 
@@ -71,4 +70,5 @@ class UserRegistrationTest extends TestCase
             ['shouldPass' => true, ['username' => 'admin', 'password' => 'test@123', 'dob' => '1993-12-01', 'full_name' => 'Praneeth Kalluri'], 'message' => 'All details are valid']
         ];
     }
+
 }

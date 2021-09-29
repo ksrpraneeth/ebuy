@@ -28,11 +28,11 @@ class UserController extends Controller
     {
         $credentials = $userAuthRequest->all();
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Invalid Credentials', 'status' => false], 401);
+            return response()->json(['message' => 'Invalid Credentials', 'status' => false], 401);
         }
         if (Auth::check()) {
             $user = Auth::user()->only('username');
-            return response()->json(['status' => false, 'data' => ['token' => $token, 'user' => $user], 'message' => 'failed']);
+            return response()->json(['status' => true, 'data' => ['token' => $token, 'user' => $user], 'message' => 'Success']);
         }
     }
 }

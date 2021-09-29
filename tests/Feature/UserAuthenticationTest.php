@@ -41,6 +41,8 @@ class UserAuthenticationTest extends TestCase
         $response = $this->post('api/login', ['username' => $params['username'], 'password' => $params['password']]);
         $response->assertSuccessful();
         $response->assertJsonStructure(['status', 'data' => ['token', 'user'], 'message']);
+        $this->assertEquals(true,$response->json('status'));
+        $this->assertEquals('Success',$response->json('message'));
         $user = User::where('username', $response->json('data')['user']['username'])->first();
         $this->assertAuthenticatedAs($user);
     }
@@ -54,6 +56,8 @@ class UserAuthenticationTest extends TestCase
         $this->post('api/register', $params);
         $response = $this->post('api/login', ['username' => $params['username'], 'password' => 'slkfjaslf']);
         $response->assertUnauthorized();
+        $this->assertEquals(false,$response->json('status'));
+        $this->assertEquals('Invalid Credentials',$response->json('message'));
     }
 
 
@@ -66,5 +70,7 @@ class UserAuthenticationTest extends TestCase
             ['shouldPass' => false, 'data' => ['password' => 'test'], 'message' => 'Username is required'],
             ['shouldPass' => true, 'data' => ['username' => 'admin', 'password' => 'test'], 'message' => '']];
     }
+
+
 
 }

@@ -41,10 +41,10 @@ class UserAuthenticationTest extends TestCase
         $response = $this->post('api/login', ['username' => $params['username'], 'password' => $params['password']]);
         $response->assertSuccessful();
         $response->assertJsonStructure(['status', 'data' => ['token', 'user'], 'message']);
-        $this->assertEquals(true,$response->json('status'));
-        $this->assertEquals('Success',$response->json('message'));
         $user = User::where('username', $response->json('data')['user']['username'])->first();
         $this->assertAuthenticatedAs($user);
+        $this->assertEquals(true,$response->json('status'));
+        $this->assertEquals('Success',$response->json('message'));
     }
 
     /**

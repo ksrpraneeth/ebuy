@@ -28,7 +28,7 @@ class UserAuthenticationTest extends TestCase
     {
         $rules = (new UserAuthRequest())->rules();
         $validator = Validator::make($data, $rules);
-        $this->assertEquals($shouldPass, $validator->passes());
+        $this->assertEquals($shouldPass, $validator->passes(),$message);
     }
 
     /**

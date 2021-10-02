@@ -27,12 +27,11 @@ class UserController extends Controller
     public function login(UserAuthRequest $userAuthRequest)
     {
         $credentials = $userAuthRequest->all();
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['message' => 'Invalid Credentials', 'status' => false], 401);
+        $token = JWTAuth::attempt($credentials);
+        if(!$token && !Auth::check()){
+            return response()->json(['status' => false, 'data' => [], 'message' => 'Invalid Credentials']);
         }
-        if (Auth::check()) {
-            $user = Auth::user()->only('username');
-            return response()->json(['status' => true, 'data' => ['token' => $token, 'user' => $user], 'message' => 'Success']);
-        }
+        $user = Auth::user()->only('username');
+        return response()->json(['status' => true, 'data' => ['token'=>$token,'user'=>$user], 'message' => 'Success']);
     }
 }

@@ -24,11 +24,11 @@ class JwtMiddleware
     public function handle(Request $request, Closure $next)
     {
 
-        JWTAuth::setRequest($request);
         if (!$request->bearerToken()) {
             return response()->json(['status' => false, 'message' => 'Authorization Token not found'], 401);
         }
 
+        JWTAuth::setRequest($request);
 
         try {
             $user = JWTAuth::toUser(JWTAuth::getToken());

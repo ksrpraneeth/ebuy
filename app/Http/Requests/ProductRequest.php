@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ProductRequest extends FormRequest
 {
@@ -13,7 +15,19 @@ class ProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        try {
+            if ($token = JWTAuth::parseToken()) {
+                $user = JWTAuth::toUser($token);
+                if ($user) {
+                    return true;
+                }
+            }
+        } catch (\Exception $e) {
+            return false;
+
+        }
+
+        return false;
     }
 
     /**
@@ -24,8 +38,8 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'price'=>"required|gt:0",
-            'description'=>'required'
+            'price' => "required|gt:0",
+            'description' => 'required'
         ];
     }
 }

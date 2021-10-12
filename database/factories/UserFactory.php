@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -23,10 +22,10 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'username' => $this->faker->unique()->userName,
-            'password' => $this->faker->password(),
-            'dob' => $this->faker->date('Y-m-d'),
-            'full_name' => $this->faker->firstName() . " " . $this->faker->lastName()];
+            'username'=>$this->faker->unique()->userName(),
+            'password'=>$this->faker->password(),
+            'dob'=>$this->faker->date('Y-m-d'),
+            'full_name'=>$this->faker->firstName()." ".$this->faker->lastName()
+        ];
     }
-
 }

@@ -30,12 +30,19 @@ class ProductTest extends TestCase
         $this->assertCount(1, Product::all());
     }
 
+    public function actingAs(UserContract $user, $guard = null)
+    {
+        $token = JWTAuth::fromUser($user);
+        $this->withHeader('Authorization',"Bearer {$token}");
+        parent::actingAs($user);
+        return $this;
+    }
+
     /**
      * @test
      */
-    public function user_should_be_authenticated_to_save_product()
-    {
-        $response = $this->post('api/product/create', ['description' => 'Pen', 'price' => '20']);
+    public function user_should_be_authorized_to_save_product(){
+        $response = $this->post('api/product/create',['description' => 'Pen', 'price' => '20']);
         $response->assertForbidden();
     }
 
@@ -65,13 +72,6 @@ class ProductTest extends TestCase
             ['shouldPass' => false, ['description' => 'Pen', 'price' => '-1'], 'message' => 'Price should be greater than zero'],
             ['shouldPass' => true, ['description' => 'Pen', 'price' => '20'], 'message' => 'All fields are valid'],
         ];
-    }
-    public function actingAs(UserContract $user, $driver = null)
-    {
-        $token = JWTAuth::fromUser($user);
-        $this->withHeader('Authorization', "Bearer {$token}");
-        parent::actingAs($user);
-        return $this;
     }
 
 

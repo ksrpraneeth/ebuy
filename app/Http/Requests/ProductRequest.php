@@ -15,19 +15,13 @@ class ProductRequest extends FormRequest
      */
     public function authorize()
     {
-        try {
-            if ($token = JWTAuth::parseToken()) {
-                $user = JWTAuth::toUser($token);
-                if ($user) {
-                    return true;
-                }
-            }
-        } catch (\Exception $e) {
+        if(!$token = JWTAuth::getToken()){
             return false;
-
         }
-
-        return false;
+        if(!$user = JWTAuth::toUser(JWTAuth::getToken())){
+            return false;
+        }
+        return true;
     }
 
     /**
